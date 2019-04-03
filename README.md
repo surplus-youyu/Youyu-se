@@ -1,4 +1,4 @@
 # Youyu-se
-![](https://img.shields.io/badge/license-MIT-000000.svg)
+![](https://github.com/surplus-youyu/Youyu-se/blob/master/LICENSE)
 
 server-end of Youyu
