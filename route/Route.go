@@ -7,5 +7,6 @@ import (
 
 func Route(r *gin.Engine) {
 	r.PUT("/api/login", controller.LoginHandler)
+	r.POST("/api/register", controller.RegisterHandler)
 }
 
