@@ -18,9 +18,9 @@ type User struct {
 	Email    string  `gorm:"column:email"`
 }
 
-func GetUserByUid(uid string) User {
+func GetUserByEmail(email string) User {
 	result := User{}
-	DB.Table("user").Where("uid=?", uid).Find(&result)
+	DB.Table("user").Where("email=?", email).Find(&result)
 	fmt.Println(result)
 	return result
 }

@@ -7,7 +7,7 @@ import (
 
 func LoginHandler(c *gin.Context) {
 	type ReqBody struct {
-		Uid string `json:"uid"`
+		Email string `json:"email"`
 		Pwd string `json:"password"`
 	}
 	var req ReqBody
@@ -23,7 +23,7 @@ func LoginHandler(c *gin.Context) {
 		})
 		return
 	}
-	user := models.GetUserByUid(req.Uid)
+	user := models.GetUserByEmail(req.Email)
 	if user.Password == req.Pwd {
 		msg = "login successfully"
 	} else {
