@@ -32,3 +32,30 @@ func QuerySurveyHandler(c *gin.Context) {
 		"data": data,
 	})
 }
+
+func SurveyCreateHandler(c *gin.Context) {
+	type ReqBody struct {
+		PublisherId int    `json:"publisher_id"`
+		Title       string `json:"title"`
+		Content     string `json:"content"`
+	}
+	var body ReqBody
+	err := c.BindJSON(&body)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"status": "fail",
+			"msg": "invalid param",
+		})
+		return
+	}
+	newSurvey := models.Survey{
+		PublisherId: body.PublisherId,
+		Title: body.Title,
+		Content: body.Content,
+	}
+	models.CreateNewSurvey(newSurvey)
+	c.JSON(200, gin.H{
+		"status": "OK",
+		"msg": "success",
+	})
+}
