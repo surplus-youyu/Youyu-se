@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	Uid      int     `gorm:"column:uid"`
-	Password string	 `gorm:"column:password"`
+	Password string  `gorm:"column:password"`
 	RealName string  `gorm:"column:real_name"`
 	NickName string  `gorm:"column:nick_name"`
 	Age      int     `gorm:"column:age"`

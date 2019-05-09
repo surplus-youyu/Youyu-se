@@ -21,7 +21,7 @@ func init() {
 
 func getDB() (*gorm.DB, error) {
 	config := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", config.DBUser,
-	config.DBPwd, config.DBHost, config.DBName)
+		config.DBPwd, config.DBHost, config.DBName)
 	fmt.Println(config)
 	db, err := gorm.Open("mysql", config)
 	return db, err

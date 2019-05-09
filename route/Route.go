@@ -12,4 +12,3 @@ func Route(r *gin.Engine) {
 	r.GET("/api/survey/:sid", controller.QuerySurveyHandler)
 	r.POST("/api/survey", controller.SurveyCreateHandler)
 }
-
