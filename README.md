@@ -10,6 +10,6 @@ server-end of Youyu
 
 ```bash
 $ go mod vendor
-$ go build main.go
+$ go build -mod=vendor
 ```
 
