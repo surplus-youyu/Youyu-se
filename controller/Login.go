@@ -9,7 +9,7 @@ import (
 func LoginHandler(c *gin.Context) {
 	type ReqBody struct {
 		Email string `json:"email"`
-		Pwd string `json:"password"`
+		Pwd   string `json:"password"`
 	}
 	var req ReqBody
 	var msg string
@@ -20,7 +20,7 @@ func LoginHandler(c *gin.Context) {
 		statusCode = 400
 		c.JSON(statusCode, gin.H{
 			"status": "fail",
-			"msg": msg,
+			"msg":    msg,
 		})
 		return
 	}
@@ -33,7 +33,7 @@ func LoginHandler(c *gin.Context) {
 	}
 	c.JSON(statusCode, gin.H{
 		"status": "OK",
-		"msg": msg,
+		"msg":    msg,
 	})
 }
 
@@ -42,7 +42,7 @@ func RegisterHandler(c *gin.Context) {
 		Password string `json:"password"`
 		RealName string `json:"real_name"`
 		NickName string `json:"nick_name"`
-		Age      int     `json:"age"`
+		Age      int    `json:"age"`
 		Gender   string `json:"gender"`
 		Major    string `json:"major"`
 		Grade    int    `json:"grade"`
@@ -58,7 +58,7 @@ func RegisterHandler(c *gin.Context) {
 		statusCode = 400
 		c.JSON(statusCode, gin.H{
 			"status": "fail",
-			"msg": msg,
+			"msg":    msg,
 		})
 		return
 	}
@@ -76,15 +76,15 @@ func RegisterHandler(c *gin.Context) {
 			Age:      req.Age,
 			Gender:   req.Gender,
 			Balance:  0.0,
-			Major:   req.Major,
-			Grade:   req.Grade,
-			Phone:   req.Phone,
-			Email:   req.Email,
+			Major:    req.Major,
+			Grade:    req.Grade,
+			Phone:    req.Phone,
+			Email:    req.Email,
 		}
 		models.CreateNewUser(newUser)
 	}
 	c.JSON(statusCode, gin.H{
 		"status": "OK",
-		"msg": msg,
+		"msg":    msg,
 	})
 }

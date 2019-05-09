@@ -15,7 +15,7 @@ func QuerySurveyHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status": "fail",
-			"msg": "invalid param",
+			"msg":    "invalid param",
 		})
 		return
 	}
@@ -28,8 +28,8 @@ func QuerySurveyHandler(c *gin.Context) {
 	}
 	c.JSON(statusCode, gin.H{
 		"status": "OK",
-		"msg": msg,
-		"data": data,
+		"msg":    msg,
+		"data":   data,
 	})
 }
 
@@ -44,18 +44,18 @@ func SurveyCreateHandler(c *gin.Context) {
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status": "fail",
-			"msg": "invalid param",
+			"msg":    "invalid param",
 		})
 		return
 	}
 	newSurvey := models.Survey{
 		PublisherId: body.PublisherId,
-		Title: body.Title,
-		Content: body.Content,
+		Title:       body.Title,
+		Content:     body.Content,
 	}
 	models.CreateNewSurvey(newSurvey)
 	c.JSON(200, gin.H{
 		"status": "OK",
-		"msg": "success",
+		"msg":    "success",
 	})
 }
