@@ -1,12 +1,24 @@
-language: go
+nguage: go
 
 go:
   - 1.12.x
 
+addons:
+  ssh_known_hosts:
+    - "$server_ip"
+
 env:
   - GO111MODULE=on
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_f33d63438573_key -iv $encrypted_f33d63438573_iv
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
+  - chmod 600 ~/.ssh/id_rsa
 
 script:
   - go build -mod=vendor
   - diff -u <(echo -n) <(gofmt -d $(find . -type f -name "*.go" ! -path "./vendor/*"))
   - go test -v ./...
+
+after_success:
+  - test $TRAVIS_BRANCH = "master" && ssh travis@$server_ip -o StrictHostKeyChecking=no "bash ~/Youyu-se/.travis/deploy.sh"
