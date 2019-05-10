@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    container_name: youyu-se
+    image: golang:latest
+    working_dir: /go/src/github.com/surplus-youyu/Youyu-se
+    command: go run -mod=vendor main.go
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ..:/go/src/github.com/surplus-youyu/Youyu-se 
