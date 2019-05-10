@@ -2,15 +2,16 @@ package main
 
 import (
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/memstore"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/route"
+	"github.com/surplus-youyu/Youyu-se/config"
 )
 
 func main() {
 	r := gin.Default()
-	store := memstore.NewStore([]byte("secret"))
-	r.Use(sessions.Sessions("mysession", store))
+	store := cookie.NewStore([]byte(config.SessionKey))
+	r.Use(sessions.Sessions("youyu-session", store))
 
 	route.Route(r)
 	err := r.Run() // listen and serve on 0.0.0.0:8080
