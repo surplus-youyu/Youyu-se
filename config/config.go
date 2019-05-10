@@ -7,4 +7,6 @@ var (
 	DBName = os.Getenv("DBName")
 	DBUser = os.Getenv("DBUser")
 	DBPwd  = os.Getenv("DBPwd")
+
+	SessionKey = os.Getenv("session_key")
 )
