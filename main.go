@@ -4,8 +4,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/surplus-youyu/Youyu-se/route"
 	"github.com/surplus-youyu/Youyu-se/config"
+	"github.com/surplus-youyu/Youyu-se/route"
 )
 
 func main() {
