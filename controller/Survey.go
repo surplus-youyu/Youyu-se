@@ -32,7 +32,6 @@ func QuerySurveyHandler(c *gin.Context) {
 	})
 }
 
-
 func SurveyCreateHandler(c *gin.Context) {
 	type ReqBody struct {
 		PublisherId int    `json:"publisher_id"`
@@ -72,7 +71,7 @@ func GetAllSurvey(c *gin.Context) {
 }
 
 // TODO
-// 
+//
 
 func AnswerSubmit(c *gin.Context) {
 
