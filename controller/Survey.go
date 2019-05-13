@@ -60,13 +60,11 @@ func SurveyCreateHandler(c *gin.Context) {
 }
 
 func GetAllSurvey(c *gin.Context) {
-	data := models.Survey{}
 	result := models.GetAllSurvey()
-	data = result[0]
 	c.JSON(200, gin.H{
 		"status": true,
 		"msg":    "success",
-		"data":   data,
+		"data":   result,
 	})
 }
 

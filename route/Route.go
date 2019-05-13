@@ -19,5 +19,5 @@ func Route(r *gin.Engine) {
 	// r.GET("/api/:uid/surveys")
 
 	r.GET("/api/surveys", controller.GetAllSurvey)
-	r.POST("/api/survey", controller.SurveyCreateHandler)
+	r.POST("/api/surveys", controller.SurveyCreateHandler)
 }
