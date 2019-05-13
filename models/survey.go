@@ -16,3 +16,15 @@ func GetSurveyById(sid int32) []Survey {
 func CreateNewSurvey(survey Survey) {
 	DB.Table("survey").Create(&survey)
 }
+
+func GetAllSurvey() []Survey {
+	var result []Survey
+	DB.Table("survey").Find(&result)
+	return result
+}
+
+func GetSurveyByPublisherId(pid int32) []Survey {
+	var result []Survey
+	DB.Table("survey").Where("publisher_id=?", pid).Find(&result)
+	return result
+}

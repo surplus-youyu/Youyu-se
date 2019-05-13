@@ -19,7 +19,7 @@ func LoginHandler(c *gin.Context) {
 		msg = "invalid param"
 		statusCode = 400
 		c.JSON(statusCode, gin.H{
-			"status": "fail",
+			"status": false,
 			"msg":    msg,
 		})
 		return
@@ -32,7 +32,7 @@ func LoginHandler(c *gin.Context) {
 		statusCode = 403
 	}
 	c.JSON(statusCode, gin.H{
-		"status": "OK",
+		"status": true,
 		"msg":    msg,
 	})
 }
@@ -57,7 +57,7 @@ func RegisterHandler(c *gin.Context) {
 		msg = "invalid param"
 		statusCode = 400
 		c.JSON(statusCode, gin.H{
-			"status": "fail",
+			"status": false,
 			"msg":    msg,
 		})
 		return
@@ -84,7 +84,7 @@ func RegisterHandler(c *gin.Context) {
 		models.CreateNewUser(newUser)
 	}
 	c.JSON(statusCode, gin.H{
-		"status": "OK",
+		"status": true,
 		"msg":    msg,
 	})
 }

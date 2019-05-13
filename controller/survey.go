@@ -9,12 +9,11 @@ import (
 func QuerySurveyHandler(c *gin.Context) {
 	param := c.Param("sid")
 	sid, err := strconv.ParseInt(param, 10, 32)
-	statusCode := 200
 	msg := ""
 	data := models.Survey{}
 	if err != nil {
 		c.JSON(400, gin.H{
-			"status": "fail",
+			"status": false,
 			"msg":    "invalid param",
 		})
 		return
@@ -26,8 +25,8 @@ func QuerySurveyHandler(c *gin.Context) {
 		msg = "success"
 		data = result[0]
 	}
-	c.JSON(statusCode, gin.H{
-		"status": "OK",
+	c.JSON(200, gin.H{
+		"status": true,
 		"msg":    msg,
 		"data":   data,
 	})
@@ -43,7 +42,7 @@ func SurveyCreateHandler(c *gin.Context) {
 	err := c.BindJSON(&body)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"status": "fail",
+			"status": false,
 			"msg":    "invalid param",
 		})
 		return
@@ -55,7 +54,23 @@ func SurveyCreateHandler(c *gin.Context) {
 	}
 	models.CreateNewSurvey(newSurvey)
 	c.JSON(200, gin.H{
-		"status": "OK",
+		"status": true,
 		"msg":    "success",
 	})
+}
+
+func GetAllSurvey(c *gin.Context) {
+	result := models.GetAllSurvey()
+	c.JSON(200, gin.H{
+		"status": true,
+		"msg":    "success",
+		"data":   result,
+	})
+}
+
+// TODO
+//
+
+func AnswerSubmit(c *gin.Context) {
+
 }
