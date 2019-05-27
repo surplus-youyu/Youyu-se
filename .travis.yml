@@ -21,4 +21,4 @@ script:
   - go test -v ./...
 
 after_success:
-  - test $TRAVIS_BRANCH = "master" && ssh travis@$server_ip -o StrictHostKeyChecking=no "bash ~/Youyu-se/.travis/deploy.sh"
+  - test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ssh travis@$server_ip -o StrictHostKeyChecking=no "bash ~/Youyu-se/.travis/deploy.sh"
