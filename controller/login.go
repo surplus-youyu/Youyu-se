@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/sessions"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"time"
 )
@@ -31,6 +32,10 @@ func LoginHandler(c *gin.Context) {
 		msg = "username not exists or password mismatch"
 		statusCode = 403
 	}
+
+	session := sessions.Default(c)
+	session.Set("email", user[0].Email)
+	_ = session.Save()
 	c.JSON(statusCode, gin.H{
 		"status": true,
 		"msg":    msg,
