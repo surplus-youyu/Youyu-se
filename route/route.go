@@ -1,8 +1,8 @@
 package route
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/controller"
 )
 
@@ -11,7 +11,7 @@ func loginRequired() gin.HandlerFunc {
 		session := sessions.Default(c)
 		if session.Get("email") == nil {
 			c.Abort()
-			c.JSON(401 , gin.H{
+			c.JSON(401, gin.H{
 				"status": false,
 				"msg":    "you should login first",
 			})
@@ -20,7 +20,6 @@ func loginRequired() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
 
 func Route(r *gin.Engine) {
 	r.PUT("/api/login", controller.LoginHandler)

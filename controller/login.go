@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"time"
 )
