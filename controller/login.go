@@ -4,7 +4,6 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
-	"time"
 )
 
 func LoginHandler(c *gin.Context) {
@@ -45,14 +44,11 @@ func LoginHandler(c *gin.Context) {
 func RegisterHandler(c *gin.Context) {
 	type ReqBody struct {
 		Password string `json:"password"`
-		RealName string `json:"real_name"`
 		NickName string `json:"nick_name"`
-		Age      int    `json:"age"`
-		Gender   string `json:"gender"`
-		Major    string `json:"major"`
-		Grade    int    `json:"grade"`
-		Phone    string `json:"phone"`
 		Email    string `json:"email"`
+		Age      int    `gorm:"column:age"`
+		Gender   string `gorm:"column:gender"`
+		Phone    string `gorm:"column:phone"`
 	}
 	var req ReqBody
 	var msg string
@@ -74,17 +70,13 @@ func RegisterHandler(c *gin.Context) {
 	} else {
 		msg = "success"
 		newUser := models.User{
-			Uid:      int(time.Now().Unix()),
 			Password: req.Password,
-			RealName: req.RealName,
 			NickName: req.NickName,
+			Balance:  0.0,
+			Email:    req.Email,
 			Age:      req.Age,
 			Gender:   req.Gender,
-			Balance:  0.0,
-			Major:    req.Major,
-			Grade:    req.Grade,
 			Phone:    req.Phone,
-			Email:    req.Email,
 		}
 		models.CreateNewUser(newUser)
 	}
