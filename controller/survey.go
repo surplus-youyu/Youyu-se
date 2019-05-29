@@ -34,8 +34,8 @@ func QuerySurveyHandler(c *gin.Context) {
 
 func SurveyCreateHandler(c *gin.Context) {
 	type ReqBody struct {
-		Title       string `json:"title"`
-		Content     string `json:"content"`
+		Title   string `json:"title"`
+		Content string `json:"content"`
 	}
 	var body ReqBody
 	err := c.BindJSON(&body)
