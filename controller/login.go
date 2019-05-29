@@ -33,7 +33,7 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set("email", user[0].Email)
+	session.Set("user", user[0])
 	_ = session.Save()
 	c.JSON(statusCode, gin.H{
 		"status": true,

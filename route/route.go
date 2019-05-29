@@ -9,8 +9,8 @@ import (
 func loginRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		email := session.Get("email")
-		if email == nil {
+		user := session.Get("user")
+		if user == nil {
 			c.Abort()
 			c.JSON(401, gin.H{
 				"status": false,
@@ -18,7 +18,7 @@ func loginRequired() gin.HandlerFunc {
 			})
 			return
 		}
-		c.Set("email", email)
+		c.Set("user", user)
 		c.Next()
 	}
 }
