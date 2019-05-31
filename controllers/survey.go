@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
@@ -34,9 +34,8 @@ func QuerySurveyHandler(c *gin.Context) {
 
 func SurveyCreateHandler(c *gin.Context) {
 	type ReqBody struct {
-		PublisherId int    `json:"publisher_id"`
-		Title       string `json:"title"`
-		Content     string `json:"content"`
+		Title   string `json:"title"`
+		Content string `json:"content"`
 	}
 	var body ReqBody
 	err := c.BindJSON(&body)
@@ -47,8 +46,11 @@ func SurveyCreateHandler(c *gin.Context) {
 		})
 		return
 	}
+
+	user := c.MustGet("user").(models.User)
+
 	newSurvey := models.Survey{
-		PublisherId: body.PublisherId,
+		PublisherId: user.Uid,
 		Title:       body.Title,
 		Content:     body.Content,
 	}
