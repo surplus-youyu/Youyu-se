@@ -20,3 +20,7 @@ func GetUserByEmail(email string) []User {
 func CreateNewUser(newUser User) {
 	DB.Table("user").Create(&newUser)
 }
+
+func UpdateUser(newUser User) {
+	DB.Save(&newUser)
+}

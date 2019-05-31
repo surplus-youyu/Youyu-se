@@ -29,7 +29,11 @@ func Route(r *gin.Engine) {
 
 	r.Use(loginRequired())
 
+	r.GET("api/user", controllers.GetUserInfo)
+	r.PUT("api/user", controllers.UpdateUserInfo)
+
 	r.GET("/api/surveys/:sid", controllers.QuerySurveyHandler)
+
 	// TODO
 	// 填写提交问卷接口 PUT or POST
 	// r.PUT("/api/surveys/:sid", )
