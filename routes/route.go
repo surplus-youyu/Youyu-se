@@ -29,8 +29,10 @@ func Route(r *gin.Engine) {
 
 	r.Use(loginRequired())
 
-	r.GET("api/user", controllers.GetUserInfo)
-	r.PUT("api/user", controllers.UpdateUserInfo)
+	r.GET("/api/user", controllers.GetUserInfo)
+	r.PUT("/api/user", controllers.UpdateUserInfo)
+	r.GET("/api/user/avatar", controllers.GetAvatar)
+	r.PUT("api/user/avatar", controllers.UpdateAvatar)
 
 	r.GET("/api/surveys/:sid", controllers.QuerySurveyHandler)
 

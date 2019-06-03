@@ -3,12 +3,13 @@ package models
 type User struct {
 	Uid      int     `gorm:"column:uid"`
 	Password string  `gorm:"column:password"`
-	NickName string  `gorm:"column:nick_name"`
+	NickName string  `gorm:"column:nickname"`
 	Balance  float32 `gorm:"column:balance"`
 	Email    string  `gorm:"column:email"`
 	Age      int     `gorm:"column:age"`
 	Gender   string  `gorm:"column:gender"`
 	Phone    string  `gorm:"column:phone"`
+	Avatar   string  `gorm:"column:avatar"`
 }
 
 func GetUserByEmail(email string) []User {
