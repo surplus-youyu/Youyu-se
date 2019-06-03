@@ -24,26 +24,31 @@ func loginRequired() gin.HandlerFunc {
 }
 
 func Route(r *gin.Engine) {
-	r.PUT("/api/login", controllers.LoginHandler)
-	r.POST("/api/register", controllers.RegisterHandler)
 
-	r.Use(loginRequired())
+	r.Group("/api")
+	{
+		// auth api
+		r.PUT("/login", controllers.LoginHandler)
+		r.POST("/register", controllers.RegisterHandler)
 
-	r.GET("/api/user", controllers.GetUserInfo)
-	r.PUT("/api/user", controllers.UpdateUserInfo)
-	r.GET("/api/user/avatar", controllers.GetAvatar)
-	r.PUT("api/user/avatar", controllers.UpdateAvatar)
+		// login middleware
+		r.Use(loginRequired())
 
-	r.GET("/api/surveys/:sid", controllers.QuerySurveyHandler)
+		// user apis
+		r.Group("/user")
+		{
+			r.GET("/", controllers.GetUserInfo)
+			r.PUT("/", controllers.UpdateUserInfo)
+			r.GET("/avatar", controllers.GetAvatar)
+			r.PUT("/avatar", controllers.UpdateAvatar)
+		}
 
-	// TODO
-	// 填写提交问卷接口 PUT or POST
-	// r.PUT("/api/surveys/:sid", )
-
-	// TODO
-	// 获取一个人所有的问卷
-	// r.GET("/api/:uid/surveys")
-
-	r.GET("/api/surveys", controllers.GetAllSurvey)
-	r.POST("/api/surveys", controllers.SurveyCreateHandler)
+		// tasks api
+		r.Group("/tasks")
+		{
+			r.GET("/", controllers.GetAllSurvey)
+			r.POST("/", controllers.SurveyCreateHandler)
+			r.GET("/:tid", controllers.QuerySurveyHandler)
+		}
+	}
 }
