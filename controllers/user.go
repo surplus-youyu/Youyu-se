@@ -78,7 +78,7 @@ func UpdateAvatar(c *gin.Context) {
 		models.UpdateUser(user)
 	}
 
-	if err := c.SaveUploadedFile(newAvatar, avatarPath + string(user.Uid)); err != nil {
+	if err := c.SaveUploadedFile(newAvatar, avatarPath+string(user.Uid)); err != nil {
 		c.JSON(500, gin.H{
 			"status":  false,
 			"message": "Cannot upload avatar",
