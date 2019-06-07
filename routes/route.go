@@ -24,15 +24,15 @@ func loginRequired() gin.HandlerFunc {
 }
 
 func Route(r *gin.Engine) {
-	r.PUT("/api/login", controllers.LoginHandler)
-	r.POST("/api/register", controllers.RegisterHandler)
+	r.PUT("/api/user/login", controllers.LoginHandler)
+	r.POST("/api/user/register", controllers.RegisterHandler)
 
 	r.Use(loginRequired())
 
-	r.GET("api/user", controllers.GetUserInfo)
-	r.PUT("api/user", controllers.UpdateUserInfo)
+	r.GET("/api/user", controllers.GetUserInfo)
+	r.PUT("/api/user", controllers.UpdateUserInfo)
 
-	r.GET("/api/surveys/:sid", controllers.QuerySurveyHandler)
+	r.GET("/api/tasks/:tid", controllers.QueryTaskHandler)
 
 	// TODO
 	// 填写提交问卷接口 PUT or POST
@@ -42,6 +42,6 @@ func Route(r *gin.Engine) {
 	// 获取一个人所有的问卷
 	// r.GET("/api/:uid/surveys")
 
-	r.GET("/api/surveys", controllers.GetAllSurvey)
-	r.POST("/api/surveys", controllers.SurveyCreateHandler)
+	r.GET("/api/surveys", controllers.GetAllTask)
+	r.POST("/api/surveys", controllers.TaskCreateHandler)
 }

@@ -46,9 +46,9 @@ func RegisterHandler(c *gin.Context) {
 		Password string `json:"password"`
 		NickName string `json:"nick_name"`
 		Email    string `json:"email"`
-		Age      int    `gorm:"column:age"`
-		Gender   string `gorm:"column:gender"`
-		Phone    string `gorm:"column:phone"`
+		Age      int    `json:"age"`
+		Gender   string `json:"gender"`
+		Phone    string `json:"phone"`
 	}
 	var req ReqBody
 	var msg string
