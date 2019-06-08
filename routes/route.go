@@ -4,13 +4,14 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/controllers"
+	"github.com/surplus-youyu/Youyu-se/models"
 )
 
 func loginRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
-		user := session.Get("user")
-		if user == nil {
+		email := session.Get("userEmail")
+		if email == nil {
 			c.Abort()
 			c.JSON(401, gin.H{
 				"status": false,
@@ -18,6 +19,7 @@ func loginRequired() gin.HandlerFunc {
 			})
 			return
 		}
+		user := models.GetUserByEmail(email.(string))[0]
 		c.Set("user", user)
 		c.Next()
 	}
@@ -25,30 +27,30 @@ func loginRequired() gin.HandlerFunc {
 
 func Route(r *gin.Engine) {
 
-	r.Group("/api")
+	api := r.Group("/api")
 	{
 		// auth api
-		r.PUT("/login", controllers.LoginHandler)
-		r.POST("/register", controllers.RegisterHandler)
+		api.PUT("/login", controllers.LoginHandler)
+		api.POST("/register", controllers.RegisterHandler)
 
 		// login middleware
-		r.Use(loginRequired())
+		api.Use(loginRequired())
 
 		// user apis
-		r.Group("/user")
+		user := api.Group("/user")
 		{
-			r.GET("/", controllers.GetUserInfo)
-			r.PUT("/", controllers.UpdateUserInfo)
-			r.GET("/avatar", controllers.GetAvatar)
-			r.PUT("/avatar", controllers.UpdateAvatar)
+			user.GET("/", controllers.GetUserInfo)
+			user.PUT("/", controllers.UpdateUserInfo)
+			user.GET("/avatar", controllers.GetAvatar)
+			user.PUT("/avatar", controllers.UpdateAvatar)
 		}
 
 		// tasks api
-		r.Group("/tasks")
+		task := api.Group("/tasks")
 		{
-			r.GET("/", controllers.GetAllSurvey)
-			r.POST("/", controllers.SurveyCreateHandler)
-			r.GET("/:tid", controllers.QuerySurveyHandler)
+			task.GET("/", controllers.GetAllSurvey)
+			task.POST("/", controllers.SurveyCreateHandler)
+			task.GET("/:tid", controllers.QuerySurveyHandler)
 		}
 	}
 }
