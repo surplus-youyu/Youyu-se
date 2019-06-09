@@ -6,11 +6,11 @@ import (
 	"strconv"
 )
 
-func QueryTaskHandler(c *gin.Context) {
-	param := c.Param("tid")
-	tid, err := strconv.ParseInt(param, 10, 32)
+func QuerySurveyHandler(c *gin.Context) {
+	param := c.Param("sid")
+	sid, err := strconv.ParseInt(param, 10, 32)
 	msg := ""
-	data := models.Task{}
+	data := models.Survey{}
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status": false,
@@ -18,9 +18,9 @@ func QueryTaskHandler(c *gin.Context) {
 		})
 		return
 	}
-	result := models.GetTaskById(int32(tid))
+	result := models.GetSurveyById(int32(sid))
 	if len(result) == 0 {
-		msg = "task not found"
+		msg = "survey not found"
 	} else {
 		msg = "success"
 		data = result[0]
@@ -32,14 +32,10 @@ func QueryTaskHandler(c *gin.Context) {
 	})
 }
 
-func TaskCreateHandler(c *gin.Context) {
+func SurveyCreateHandler(c *gin.Context) {
 	type ReqBody struct {
-		Title     string `json:"title"`
-		Summary   string `json:"content"`
-		Type      string `json:"type"`
-		Bounty    int    `json:"bounty"`
-		Extra     string `json:"extra"`
-		Enclosure string `json:"enclosure"`
+		Title   string `json:"title"`
+		Content string `json:"content"`
 	}
 	var body ReqBody
 	err := c.BindJSON(&body)
@@ -53,24 +49,20 @@ func TaskCreateHandler(c *gin.Context) {
 
 	user := c.MustGet("user").(models.User)
 
-	newTask := models.Task{
-		Owner:     user.Uid,
-		Title:     body.Title,
-		Summary:   body.Summary,
-		Type:      body.Type,
-		Bounty:    body.Bounty,
-		Extra:     body.Extra,
-		Enclosure: body.Enclosure,
+	newSurvey := models.Survey{
+		PublisherId: user.Uid,
+		Title:       body.Title,
+		Content:     body.Content,
 	}
-	models.CreateNewTask(newTask)
+	models.CreateNewSurvey(newSurvey)
 	c.JSON(200, gin.H{
 		"status": true,
 		"msg":    "success",
 	})
 }
 
-func GetAllTask(c *gin.Context) {
-	result := models.GetAllTasks()
+func GetAllSurvey(c *gin.Context) {
+	result := models.GetAllSurvey()
 	c.JSON(200, gin.H{
 		"status": true,
 		"msg":    "success",
