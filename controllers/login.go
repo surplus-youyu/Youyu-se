@@ -27,14 +27,16 @@ func LoginHandler(c *gin.Context) {
 	user := models.GetUserByEmail(req.Email)
 	if len(user) > 0 && user[0].Password == req.Pwd {
 		msg = "login successfully"
+
+		session := sessions.Default(c)
+		session.Set("userEmail", user[0].Email)
+		err = session.Save()
+
 	} else {
 		msg = "username not exists or password mismatch"
 		statusCode = 403
 	}
 
-	session := sessions.Default(c)
-	session.Set("user", user[0])
-	_ = session.Save()
 	c.JSON(statusCode, gin.H{
 		"status": true,
 		"msg":    msg,

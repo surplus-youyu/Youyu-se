@@ -5,6 +5,8 @@ import (
 	"github.com/surplus-youyu/Youyu-se/models"
 )
 
+const avatarPath = "static/avatars/"
+
 func GetUserInfo(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 
@@ -48,6 +50,40 @@ func UpdateUserInfo(c *gin.Context) {
 	user.Phone = req.Phone
 
 	models.UpdateUser(user)
+
+	c.JSON(200, gin.H{
+		"status": true,
+		"msg":    "success",
+	})
+}
+
+func GetAvatar(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+	c.File(avatarPath + user.Avatar)
+}
+
+func UpdateAvatar(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+	newAvatar, err := c.FormFile("avatar")
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"status":  false,
+			"message": "invalid avatar",
+		})
+	}
+
+	if user.Avatar == "default" {
+		user.Avatar = string(user.Uid)
+		models.UpdateUser(user)
+	}
+
+	if err := c.SaveUploadedFile(newAvatar, avatarPath+string(user.Uid)); err != nil {
+		c.JSON(500, gin.H{
+			"status":  false,
+			"message": "Cannot upload avatar",
+		})
+	}
 
 	c.JSON(200, gin.H{
 		"status": true,
