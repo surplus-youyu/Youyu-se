@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/controllers"
 	"github.com/surplus-youyu/Youyu-se/models"
+	"github.com/surplus-youyu/Youyu-se/utils"
 )
 
 func loginRequired() gin.HandlerFunc {
@@ -28,6 +29,7 @@ func loginRequired() gin.HandlerFunc {
 func Route(r *gin.Engine) {
 
 	api := r.Group("/api")
+	api.Use(utils.HandleError)
 	{
 		// auth api
 		api.PUT("/login", controllers.LoginHandler)
@@ -35,6 +37,15 @@ func Route(r *gin.Engine) {
 
 		// login middleware
 		api.Use(loginRequired())
+
+		// tasks apis
+		api.GET("/tasks", controllers.GetTaskList)
+		api.POST("/tasks", controllers.CreateTask)
+		api.GET("/tasks/:task_id", controllers.GetTaskByID)
+		api.POST("/tasks/:task_id/assign", controllers.AssignTask)
+
+		// assignments apis
+		api.GET("/assignments", controllers.GetAssignList)
 
 		// user apis
 		user := api.Group("/user")
@@ -46,11 +57,11 @@ func Route(r *gin.Engine) {
 		}
 
 		// tasks api
-		task := api.Group("/tasks")
-		{
-			task.GET("/", controllers.GetAllSurvey)
-			task.POST("/", controllers.SurveyCreateHandler)
-			task.GET("/:tid", controllers.QuerySurveyHandler)
-		}
+		// task := api.Group("/tasks")
+		// {
+		// 	task.GET("/", controllers.GetAllSurvey)
+		// 	task.POST("/", controllers.SurveyCreateHandler)
+		// 	task.GET("/:tid", controllers.QuerySurveyHandler)
+		// }
 	}
 }

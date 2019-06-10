@@ -17,8 +17,10 @@ func GetTaskList(c *gin.Context) {
 
 func CreateTask(c *gin.Context) {
 	type Req struct {
-		Title       string  `json:"title"`
-		Type        string  `json:"type"`
+		Title string `json:"title"`
+		Type  string `json:"type"`
+		// Demand      string  `json:"demand"`
+		Limit       int     `json:"limit"`
 		Description string  `json:"description"`
 		Content     string  `json:"content"`
 		Reward      float32 `json:"reward"`
@@ -39,11 +41,12 @@ func CreateTask(c *gin.Context) {
 	insertID := models.CreateTask(models.Task{
 		Title:       body.Title,
 		Type:        body.Type,
+		Limit:       body.Limit,
 		Description: body.Description,
 		Content:     body.Content,
 		Reward:      body.Reward,
 		Creator:     user.Uid,
-		State:       models.TaskStateCreated,
+		Status:      models.TaskStatusCreated,
 	}, user)
 	c.JSON(200, gin.H{
 		"data": gin.H{
@@ -66,26 +69,38 @@ func GetTaskByID(c *gin.Context) {
 	})
 }
 
-// func AssginTask(c *gin.Context) {
-// 	user := c.MustGet("user").(models.User)
-// 	id, err := strconv.Atoi(c.Param("task_id"))
-// 	if err != nil {
-// 		c.AbortWithStatus(400)
-// 	}
-// 	// tricky serialization isolation level, should only be used with single-process-server
-// 	models.DB.Lock()
-// 	defer models.DB.Unlock()
-// 	task := models.GetTaskByID(id)
-// 	if task.AssignedTo != 0 {
-// 		c.AbortWithStatusJSON(403, gin.H{
-// 			"msg": "任务已被认领",
-// 		})
-// 		return
-// 	}
-// 	task.AssignedTo = user.Uid
-// 	task.State = models.TaskStatePending
-// 	models.UpsertTask(task)
-// 	c.JSON(200, gin.H{
-// 		"msg": "OK",
-// 	})
-// }
+func GetAssignList(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+	assgnList := models.GetAssignmentListByUid(user.Uid)
+	c.JSON(200, gin.H{
+		"data": assgnList,
+		"msg":  "OK",
+	})
+}
+
+func AssignTask(c *gin.Context) {
+	user := c.MustGet("user").(models.User)
+	id, err := strconv.Atoi(c.Param("task_id"))
+	if err != nil {
+		c.AbortWithStatus(400)
+	}
+	task := models.GetTaskByID(id)
+	if task.Assigned == task.Limit {
+		c.AbortWithStatusJSON(403, gin.H{
+			"msg": "任务已被认领完",
+		})
+		return
+	}
+	task.Assigned++
+	task.Status = models.TaskStatusPending
+	models.UpsertTask(task)
+	models.UpsertAssignment(models.Assignment{
+		TaskID:   task.ID,
+		Assignee: user.Uid,
+		Status:   models.AssignmentStatusPending,
+	})
+	c.JSON(200, gin.H{
+		"data": gin.H{},
+		"msg":  "OK",
+	})
+}
