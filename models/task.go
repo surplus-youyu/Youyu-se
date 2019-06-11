@@ -151,8 +151,8 @@ func IssueTaskRewards(task Task) {
 	tx.Commit()
 }
 
-func UpsertTask(task Task) {
-	if err := DB.Save(&task).Error; err != nil {
+func UpsertTask(task *Task) {
+	if err := DB.Save(task).Error; err != nil {
 		panic(err)
 	}
 }
@@ -217,9 +217,9 @@ func GetAssignmentListByTaskID(id int) []Assignment {
 	return assignList
 }
 
-func UpsertAssignment(assgn Assignment) {
+func UpsertAssignment(assgn *Assignment) {
 	assgn.UpdatedAt = time.Now()
-	if err := DB.Save(&assgn).Error; err != nil {
+	if err := DB.Save(assgn).Error; err != nil {
 		if strings.Contains(err.Error(), "Error 1062") {
 			panic(utils.Error{403, "用户已认领过该任务", err})
 		} else {
