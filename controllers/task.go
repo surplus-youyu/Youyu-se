@@ -135,7 +135,7 @@ func SubmitAssign(c *gin.Context) {
 	}
 	assgn.Payload = req.Payload
 	assgn.Status = models.AssignmentStatusJudging
-	models.UpsertAssignment(assgn)
+	models.UpsertAssignment(&assgn)
 	c.Status(204)
 }
 
@@ -180,15 +180,18 @@ func AssignTask(c *gin.Context) {
 	}
 	task.Assigned++
 	task.Status = models.TaskStatusPending
-	models.UpsertTask(task)
-	models.UpsertAssignment(models.Assignment{
+	models.UpsertTask(&task)
+	assgn := &models.Assignment{
 		TaskID:   task.ID,
 		Assignee: user.Uid,
 		Status:   models.AssignmentStatusPending,
-	})
+	}
+	models.UpsertAssignment(assgn)
 	c.JSON(200, gin.H{
-		"data": gin.H{},
-		"msg":  "OK",
+		"data": gin.H{
+			"id": assgn.ID,
+		},
+		"msg": "OK",
 	})
 }
 
@@ -226,7 +229,7 @@ func JudgeAssignment(c *gin.Context) {
 	} else {
 		assgn.Status = models.AssignmentStatusFailed
 	}
-	models.UpsertAssignment(assgn)
+	models.UpsertAssignment(&assgn)
 	c.Status(204)
 }
 
