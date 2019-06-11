@@ -1,7 +1,8 @@
 package models
 
 type User struct {
-	Uid      int     `gorm:"column:uid"`
+	// Uid      int     `gorm:"column:uid"`
+	Uid      int     `gorm:"primary_key"`
 	Password string  `gorm:"column:password"`
 	NickName string  `gorm:"column:nickname"`
 	Balance  float32 `gorm:"column:balance"`
@@ -10,6 +11,10 @@ type User struct {
 	Gender   string  `gorm:"column:gender"`
 	Phone    string  `gorm:"column:phone"`
 	Avatar   string  `gorm:"column:avatar"`
+}
+
+func (u User) TableName() string {
+	return "user"
 }
 
 func GetUserByEmail(email string) []User {

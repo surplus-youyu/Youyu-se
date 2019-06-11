@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/controllers"
 	"github.com/surplus-youyu/Youyu-se/models"
+	"github.com/surplus-youyu/Youyu-se/utils"
 )
 
 func loginRequired() gin.HandlerFunc {
@@ -28,6 +29,7 @@ func loginRequired() gin.HandlerFunc {
 func Route(r *gin.Engine) {
 
 	api := r.Group("/api")
+	api.Use(utils.HandleError)
 	{
 		// auth api
 		api.PUT("/login", controllers.LoginHandler)
@@ -35,6 +37,20 @@ func Route(r *gin.Engine) {
 
 		// login middleware
 		api.Use(loginRequired())
+
+		// tasks apis
+		api.GET("/tasks", controllers.GetTaskList)
+		api.POST("/tasks", controllers.CreateTask)
+		api.GET("/tasks/:task_id", controllers.GetTaskByID)
+		api.PUT("/tasks/:task_id", controllers.FinishTask)
+
+		// assignments apis
+		api.GET("/assignments", controllers.GetAssignList)
+		api.POST("/assignments", controllers.AssignTask)
+		api.GET("/assignments/:assgn_id", controllers.GetAssignmentByID)
+		api.PUT("/assignments/:assgn_id", controllers.SubmitAssign)
+		api.GET("/tasks/:task_id/assignments", controllers.GetAssignListByTaskID)
+		api.PUT("/tasks/:task_id/assignments/:assgn_id", controllers.JudgeAssignment)
 
 		// user apis
 		user := api.Group("/user")
@@ -45,12 +61,5 @@ func Route(r *gin.Engine) {
 			user.PUT("/avatar", controllers.UpdateAvatar)
 		}
 
-		// tasks api
-		task := api.Group("/tasks")
-		{
-			task.GET("/", controllers.GetAllSurvey)
-			task.POST("/", controllers.SurveyCreateHandler)
-			task.GET("/:tid", controllers.QuerySurveyHandler)
-		}
 	}
 }
