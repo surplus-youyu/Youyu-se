@@ -38,10 +38,14 @@ func GetTaskList() []Task {
 func CreateTask(task Task, user User) int {
 	tx := DB.Begin()
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Update
 	if err := DB.Find(&user, User{Uid: user.Uid}); err != nil {
 		tx.Rollback()
 		panic(err)
 	}
+<<<<<<< HEAD
 	user.Balance -= task.Reward
 	if user.Balance < 0 {
 		tx.Rollback()
@@ -54,12 +58,23 @@ func CreateTask(task Task, user User) int {
 	if err := tx.Create(&task).Error; err != nil {
 		tx.Rollback()
 =======
+=======
+>>>>>>> Update
 	user.Balance -= task.Reward
+	if user.Balance < 0 {
+		tx.Rollback()
+		panic("余额不足")
+	}
 	if err := tx.Save(&user).Error; err != nil {
+		tx.Rollback()
 		panic(err)
 	}
 	if err := tx.Create(&task).Error; err != nil {
+<<<<<<< HEAD
 >>>>>>> Add: task
+=======
+		tx.Rollback()
+>>>>>>> Update
 		panic(err)
 	}
 	tx.Commit()
