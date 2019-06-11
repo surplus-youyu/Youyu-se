@@ -160,6 +160,12 @@ func AssignTask(c *gin.Context) {
 	}
 	user := c.MustGet("user").(models.User)
 	task := models.GetTaskByID(req.TaskID)
+	if task.Creator == user.Uid {
+		c.AbortWithStatusJSON(403, gin.H{
+			"msg": "不能认领自己发布的任务",
+		})
+		return
+	}
 	if task.Assigned == task.Limit {
 		c.AbortWithStatusJSON(403, gin.H{
 			"msg": "任务已被认领完",
