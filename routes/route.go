@@ -42,10 +42,15 @@ func Route(r *gin.Engine) {
 		api.GET("/tasks", controllers.GetTaskList)
 		api.POST("/tasks", controllers.CreateTask)
 		api.GET("/tasks/:task_id", controllers.GetTaskByID)
-		api.POST("/tasks/:task_id/assign", controllers.AssignTask)
+		api.PUT("/tasks/:task_id", controllers.FinishTask)
 
 		// assignments apis
 		api.GET("/assignments", controllers.GetAssignList)
+		api.POST("/assignments", controllers.AssignTask)
+		api.GET("/assignments/:assgn_id", controllers.GetAssignmentByID)
+		api.PUT("/assignments/:assgn_id", controllers.SubmitAssign)
+		api.GET("/tasks/:task_id/assignments", controllers.GetAssignListByTaskID)
+		api.PUT("/tasks/:task_id/assignments/:assgn_id", controllers.JudgeAssignment)
 
 		// user apis
 		user := api.Group("/user")
@@ -56,12 +61,5 @@ func Route(r *gin.Engine) {
 			user.PUT("/avatar", controllers.UpdateAvatar)
 		}
 
-		// tasks api
-		// task := api.Group("/tasks")
-		// {
-		// 	task.GET("/", controllers.GetAllSurvey)
-		// 	task.POST("/", controllers.SurveyCreateHandler)
-		// 	task.GET("/:tid", controllers.QuerySurveyHandler)
-		// }
 	}
 }
