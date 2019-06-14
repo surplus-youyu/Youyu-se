@@ -67,7 +67,10 @@ func GetTaskList() []Task {
 
 func CreateTask(task Task, user User) int {
 	tx := DB.Begin()
-	if err := DB.Find(&user, User{Uid: user.Uid}); err != nil {
+	if err := DB.Find(&user, User{Uid: user.Uid}).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(utils.Error{404, "未找到用户", err})
+		}
 		tx.Rollback()
 		panic(err)
 	}
