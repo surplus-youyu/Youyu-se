@@ -8,7 +8,17 @@ import (
 )
 
 func GetTaskList(c *gin.Context) {
-	taskList := models.GetTaskList()
+	scope := c.Query("scope")
+	var taskList []models.Task
+	user := c.MustGet("user").(models.User)
+	switch scope {
+	case "owned":
+		taskList = models.GetTaskListByCreator(user.Uid)
+		break
+	default:
+		taskList = models.GetTaskList()
+		break
+	}
 	c.JSON(200, gin.H{
 		"data": taskList,
 		"msg":  "OK",
