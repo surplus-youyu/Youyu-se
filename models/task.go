@@ -59,7 +59,7 @@ func (a *Assignment) TableName() string {
 
 func GetTaskListByCreator(creator int) []Task {
 	var taskList []Task
-	if err := DB.Find(&taskList).Where("creator = ?", creator).Error; err != nil {
+	if err := DB.Find(&taskList, Task{Creator: creator}).Error; err != nil {
 		if !gorm.IsRecordNotFoundError(err) {
 			panic(err)
 		}
