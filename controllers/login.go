@@ -46,7 +46,7 @@ func LoginHandler(c *gin.Context) {
 func RegisterHandler(c *gin.Context) {
 	type ReqBody struct {
 		Password string `json:"password"`
-		NickName string `json:"nick_name"`
+		NickName string `json:"nickname"`
 		Email    string `json:"email"`
 		Age      int    `gorm:"column:age"`
 		Gender   string `gorm:"column:gender"`
