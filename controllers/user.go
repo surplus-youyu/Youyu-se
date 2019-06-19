@@ -20,6 +20,8 @@ func GetUserInfo(c *gin.Context) {
 			"gender":   user.Gender,
 			"phone":    user.Phone,
 			"balance":  user.Balance,
+			"grade":    user.Grade,
+			"major":    user.Major,
 		},
 	})
 }
@@ -30,7 +32,9 @@ func UpdateUserInfo(c *gin.Context) {
 		NickName string `json:"nickname"`
 		Age      int    `json:"age"`
 		Gender   string `json:"gender"`
-		Phone    string `json:"Phone"`
+		Phone    string `json:"phone"`
+		Grade    string `json:"grade"`
+		major    string `json:"major"`
 	}
 	var req ReqBody
 	err := c.BindJSON(&req)
@@ -48,6 +52,8 @@ func UpdateUserInfo(c *gin.Context) {
 	user.Age = req.Age
 	user.Gender = req.Gender
 	user.Phone = req.Phone
+	user.Major = req.major
+	user.Grade = req.Grade
 
 	models.UpdateUser(user)
 

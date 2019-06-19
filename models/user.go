@@ -11,6 +11,8 @@ type User struct {
 	Gender   string  `gorm:"column:gender"`
 	Phone    string  `gorm:"column:phone"`
 	Avatar   string  `gorm:"column:avatar"`
+	Grade    string  `gorm:"column:grade"`
+	Major    string  `gorm:"column:major"`
 }
 
 func (u User) TableName() string {
