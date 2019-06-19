@@ -51,6 +51,7 @@ func Route(r *gin.Engine) {
 		api.PUT("/assignments/:assgn_id", controllers.SubmitAssign)                   // submit assginment content
 		api.GET("/tasks/:task_id/assignments", controllers.GetAssignListByTaskID)     // get assignments with task id, only can be accessed by owner
 		api.PUT("/tasks/:task_id/assignments/:assgn_id", controllers.JudgeAssignment) // judge the assignment
+		api.GET("/tasks/:task_id/statistics", controllers.GetSurveyStatistics)        // get survey statistics
 
 		// user apis
 		user := api.Group("/user")
