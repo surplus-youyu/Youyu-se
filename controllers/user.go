@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
+	"strconv"
 )
 
 const avatarPath = "static/avatars/"
@@ -26,6 +27,27 @@ func GetUserInfo(c *gin.Context) {
 	})
 }
 
+func GetUserInfoById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("uid"))
+	if err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+	user := models.GetUserById(id)
+	c.JSON(200, gin.H{
+		"status": true,
+		"msg":    "OK",
+		"data": gin.H{
+			"nickname": user.NickName,
+			"email":    user.Email,
+			"age":      user.Age,
+			"gender":   user.Gender,
+			"grade":    user.Grade,
+			"major":    user.Major,
+		},
+	})
+}
+
 func UpdateUserInfo(c *gin.Context) {
 	type ReqBody struct {
 		Pwd      string `json:"password"`
@@ -34,7 +56,7 @@ func UpdateUserInfo(c *gin.Context) {
 		Gender   string `json:"gender"`
 		Phone    string `json:"phone"`
 		Grade    string `json:"grade"`
-		major    string `json:"major"`
+		Major    string `json:"major"`
 	}
 	var req ReqBody
 	err := c.BindJSON(&req)
@@ -52,7 +74,7 @@ func UpdateUserInfo(c *gin.Context) {
 	user.Age = req.Age
 	user.Gender = req.Gender
 	user.Phone = req.Phone
-	user.Major = req.major
+	user.Major = req.Major
 	user.Grade = req.Grade
 
 	models.UpdateUser(user)

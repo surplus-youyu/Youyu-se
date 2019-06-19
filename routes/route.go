@@ -57,6 +57,7 @@ func Route(r *gin.Engine) {
 		{
 			user.GET("/", controllers.GetUserInfo)
 			user.PUT("/", controllers.UpdateUserInfo)
+			user.GET("/:uid", controllers.GetUserInfoById)
 			user.GET("/avatar", controllers.GetAvatar)
 			user.PUT("/avatar", controllers.UpdateAvatar)
 		}
