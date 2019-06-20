@@ -240,7 +240,10 @@ func JudgeAssignment(c *gin.Context) {
 		assgn.Status = models.AssignmentStatusFailed
 	}
 	models.UpsertAssignment(&assgn)
-	c.Status(204)
+	c.JSON(204, gin.H{
+		"msg":    "OK",
+		"status": true,
+	})
 }
 
 func FinishTask(c *gin.Context) {
