@@ -1,5 +1,10 @@
 package models
 
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/surplus-youyu/Youyu-se/utils"
+)
+
 type User struct {
 	// Uid      int     `gorm:"column:uid"`
 	Uid      int     `gorm:"primary_key"`
@@ -23,6 +28,18 @@ func GetUserByEmail(email string) []User {
 	var result []User
 	DB.Table("user").Where("email=?", email).Find(&result)
 	return result
+}
+
+func GetUserById(id int) User {
+	var user User
+	if err := DB.Find(&user, User{Uid: id}).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(utils.Error{404, "用户不存在", err})
+		} else {
+			panic(err)
+		}
+	}
+	return user
 }
 
 func CreateNewUser(newUser User) {
