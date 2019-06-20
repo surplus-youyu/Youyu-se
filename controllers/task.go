@@ -307,7 +307,7 @@ func GetSurveyStatistics(c *gin.Context) {
 			var raw interface{}
 			err = json.Unmarshal([]byte(assign.Payload), &raw)
 			answer := raw.(gin.H)
-			options := answer["options"].([]string)
+			options := answer["answer"].([]string)
 
 			for _, op := range options {
 				if val, ok := data[index][op]; ok {
