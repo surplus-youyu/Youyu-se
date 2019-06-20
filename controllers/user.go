@@ -47,7 +47,11 @@ func UpdateUserInfo(c *gin.Context) {
 	}
 
 	user := c.MustGet("user").(models.User)
-	user.Password = req.Pwd
+
+	if len(req.Pwd) != 0 {
+		user.Password = req.Pwd
+	}
+
 	user.NickName = req.NickName
 	user.Age = req.Age
 	user.Gender = req.Gender
