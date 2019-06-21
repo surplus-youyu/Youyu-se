@@ -58,7 +58,7 @@ func Route(r *gin.Engine) {
 			user.GET("/", controllers.GetUserInfo)
 			user.PUT("/", controllers.UpdateUserInfo)
 			user.GET("/avatar", controllers.GetAvatar)
-			user.PUT("/avatar", controllers.UpdateAvatar)
+			user.POST("/avatar", controllers.UpdateAvatar)
 		}
 
 		api.GET("/users/:uid", controllers.GetUserInfoById) // fuck httprouter
