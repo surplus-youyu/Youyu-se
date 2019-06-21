@@ -53,15 +53,11 @@ func Route(r *gin.Engine) {
 		api.PUT("/tasks/:task_id/assignments/:assgn_id", controllers.JudgeAssignment) // judge the assignment
 
 		// user apis
-		user := api.Group("/user")
-		{
-			user.GET("/", controllers.GetUserInfo)
-			user.PUT("/", controllers.UpdateUserInfo)
-			user.GET("/avatar", controllers.GetAvatar)
-			user.POST("/avatar", controllers.UpdateAvatar)
-		}
-
-		api.GET("/users/:uid", controllers.GetUserInfoById) // fuck httprouter
+		api.GET("/user", controllers.GetUserInfo)
+		api.PUT("/user", controllers.UpdateUserInfo)
+		api.GET("/user/:uid", controllers.GetUserInfoById) // fuck httprouter
+		api.GET("/user/:uid/avatar", controllers.GetAvatar)
+		api.POST("/user/:uid/avatar", controllers.UpdateAvatar)
 
 	}
 }

@@ -15,6 +15,7 @@ func GetUserInfo(c *gin.Context) {
 		"status": true,
 		"msg":    "OK",
 		"data": gin.H{
+			"uid":      user.Uid,
 			"nickname": user.NickName,
 			"email":    user.Email,
 			"age":      user.Age,
@@ -90,12 +91,30 @@ func UpdateUserInfo(c *gin.Context) {
 }
 
 func GetAvatar(c *gin.Context) {
-	user := c.MustGet("user").(models.User)
+	uid, err := strconv.Atoi(c.Param("uid"))
+	if err != nil {
+		c.AbortWithStatus(400)
+	}
+	user := models.GetUserById(uid)
 	c.File(avatarPath + user.Avatar)
 }
 
 func UpdateAvatar(c *gin.Context) {
+	uid, err := strconv.Atoi(c.Param("uid"))
+
+	if err != nil {
+		c.AbortWithStatus(400)
+	}
+
 	user := c.MustGet("user").(models.User)
+
+	if uid != user.Uid {
+		c.AbortWithStatusJSON(403, gin.H{
+			"msg":    "只能修改自己的头像",
+			"status": true,
+		})
+	}
+
 	newAvatar, err := c.FormFile("avatar")
 
 	if err != nil {
