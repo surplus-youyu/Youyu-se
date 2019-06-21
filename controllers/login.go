@@ -51,6 +51,8 @@ func RegisterHandler(c *gin.Context) {
 		Age      int    `gorm:"column:age"`
 		Gender   string `gorm:"column:gender"`
 		Phone    string `gorm:"column:phone"`
+		Grade    string `json:"grade"`
+		Major    string `json:"major"`
 	}
 	var req ReqBody
 	var msg string
@@ -79,6 +81,9 @@ func RegisterHandler(c *gin.Context) {
 			Age:      req.Age,
 			Gender:   req.Gender,
 			Phone:    req.Phone,
+			Grade:    req.Grade,
+			Major:    req.Major,
+			Avatar:   "default",
 		}
 		models.CreateNewUser(newUser)
 	}

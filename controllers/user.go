@@ -106,7 +106,7 @@ func UpdateAvatar(c *gin.Context) {
 	}
 
 	if user.Avatar == "default" {
-		user.Avatar = string(user.Uid)
+		user.Avatar = strconv.Itoa(user.Uid)
 		models.UpdateUser(user)
 	}
 
