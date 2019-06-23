@@ -76,7 +76,7 @@ func RegisterHandler(c *gin.Context) {
 		newUser := models.User{
 			Password: req.Password,
 			NickName: req.NickName,
-			Balance:  0.0,
+			Balance:  100.0,
 			Email:    req.Email,
 			Age:      req.Age,
 			Gender:   req.Gender,
