@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -57,11 +56,14 @@ func CreateTask(c *gin.Context) {
 		Reward:      reward,
 		Creator:     user.Uid,
 		Status:      models.TaskStatusCreated,
+		Files:       "",
 	}, user)
 
 	files := form.File
 
 	if len(files) != 0 {
+		task := models.GetTaskByID(insertID)
+
 		path := filePath + utils.IntToString(insertID)
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
@@ -81,7 +83,9 @@ func CreateTask(c *gin.Context) {
 				})
 				return
 			}
+			task.Files += file.Filename + "/"
 		}
+		models.DB.Save(&task)
 	}
 
 	c.JSON(200, gin.H{
@@ -96,25 +100,9 @@ func GetTaskByID(c *gin.Context) {
 	id := utils.StringToInt(c.Param("task_id"), c)
 	task := models.GetTaskByID(id)
 
-	files, err := ioutil.ReadDir(filePath + c.Param("task_id"))
-	if err != nil {
-		c.AbortWithStatusJSON(400, gin.H{
-			"msg":    "fail to get files name",
-			"status": false,
-		})
-	}
-
-	var filenames []string
-	for _, file := range files {
-		filenames = append(filenames, file.Name())
-	}
-
 	c.JSON(200, gin.H{
-		"data": gin.H{
-			"task":  task,
-			"files": filenames,
-		},
-		"msg": "OK",
+		"data": task,
+		"msg":  "OK",
 	})
 }
 
