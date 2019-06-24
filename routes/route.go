@@ -39,19 +39,20 @@ func Route(r *gin.Engine) {
 		api.Use(loginRequired())
 
 		// tasks apis
-		api.GET("/tasks", controllers.GetTaskList)          // all tasks
-		api.POST("/tasks", controllers.CreateTask)          // create task
-		api.GET("/tasks/:task_id", controllers.GetTaskByID) // get task
-		api.PUT("/tasks/:task_id", controllers.FinishTask)  // finish the task and close it, only can be accessed by owner
+		api.GET("/tasks", controllers.GetTaskList)                           // all tasks
+		api.POST("/tasks", controllers.CreateTask)                           // create task
+		api.GET("/tasks/:task_id", controllers.GetTaskByID)                  // get task
+		api.GET("/tasks/:task_id/files/:filename", controllers.GetTaskFiles) // get task
+		api.PUT("/tasks/:task_id", controllers.FinishTask)                   // finish the task and close it, only can be accessed by owner
 
 		// assignments apis
-		api.GET("/assignments", controllers.GetAssignList)                            // get current user's assignments
-		api.POST("/assignments", controllers.AssignTask)                              // create assignment with task id
-		api.GET("/assignments/:assgn_id", controllers.GetAssignmentByID)              // get assignment detail, only can be accessed by assignee
-		api.PUT("/assignments/:assgn_id", controllers.SubmitAssign)                   // submit assginment content
-		api.GET("/tasks/:task_id/assignments", controllers.GetAssignListByTaskID)     // get assignments with task id, only can be accessed by owner
-		api.PUT("/tasks/:task_id/assignments/:assgn_id", controllers.JudgeAssignment) // judge the assignment
-		api.GET("/tasks/:task_id/statistics", controllers.GetSurveyStatistics)        // get survey statistics
+		api.GET("/assignments", controllers.GetAssignList)                             // get current user's assignments
+		api.POST("/assignments", controllers.AssignTask)                               // create assignment with task id
+		api.GET("/assignments/:assign_id", controllers.GetAssignmentByID)              // get assignment detail, only can be accessed by assignee
+		api.PUT("/assignments/:assign_id", controllers.SubmitAssign)                   // submit assginment content
+		api.GET("/tasks/:task_id/assignments", controllers.GetAssignListByTaskID)      // get assignments with task id, only can be accessed by owner
+		api.PUT("/tasks/:task_id/assignments/:assign_id", controllers.JudgeAssignment) // judge the assignment
+		api.GET("/tasks/:task_id/statistics", controllers.GetSurveyStatistics)         // get survey statistics
 
 		// user apis
 		api.GET("/user", controllers.GetUserInfo)
