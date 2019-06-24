@@ -36,6 +36,7 @@ type Task struct {
 	Content     string       `gorm:"column:content" json:"content"`
 	Status      string       `gorm:"column:status" json:"status"`
 	CreatedAt   time.Time    `gorm:"column:created_at" json:"created_at"`
+	Files       string       `gorm:"column:files" json:"files"`
 	Assignments []Assignment `gorm:"ForeignKey:TaskID" json:"-"`
 }
 
