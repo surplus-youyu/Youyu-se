@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -262,4 +263,68 @@ func FinishTask(c *gin.Context) {
 	}
 	models.IssueTaskRewards(task)
 	c.Status(204)
+}
+
+func GetSurveyStatistics(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("task_id"))
+	if err != nil {
+		c.AbortWithStatus(400)
+		return
+	}
+
+	user := c.MustGet("user").(models.User)
+	task := models.GetTaskByID(id)
+	if task.Creator != user.Uid {
+		c.AbortWithStatusJSON(403, gin.H{
+			"msg": "权限不足",
+		})
+		return
+	}
+
+	if task.Type != models.TaskTypeSurvey {
+		c.JSON(400, gin.H{
+			"status": false,
+			"msg":    "非问卷无统计",
+		})
+	}
+
+	var content []interface{}
+	err = json.Unmarshal([]byte(task.Content), &content)
+
+	data := []gin.H{}
+
+	assignList := models.GetAssignmentListByTaskID(id)
+
+	for _, q := range content {
+		question := q.(gin.H)
+		if question["type"].(int) == 3 {
+			continue
+		}
+
+		data = append(data, gin.H{})
+		index := len(data) - 1
+
+		for j := range assignList {
+			assign := assignList[j]
+
+			var raw interface{}
+			err = json.Unmarshal([]byte(assign.Payload), &raw)
+			answer := raw.(gin.H)
+			options := answer["answer"].([]string)
+
+			for _, op := range options {
+				if val, ok := data[index][op]; ok {
+					data[index][op] = val.(int) + 1
+				} else {
+					data[index][op] = 0
+				}
+			}
+		}
+	}
+
+	c.JSON(200, gin.H{
+		"status": true,
+		"msg":    "OK",
+		"data":   data,
+	})
 }
