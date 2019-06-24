@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
-	"strconv"
+	"github.com/surplus-youyu/Youyu-se/utils"
 )
 
 const avatarPath = "static/avatars/"
@@ -29,11 +29,7 @@ func GetUserInfo(c *gin.Context) {
 }
 
 func GetUserInfoById(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("uid"))
-	if err != nil {
-		c.AbortWithStatus(400)
-		return
-	}
+	id := utils.StringToInt(c.Param("uid"), c)
 	user := models.GetUserById(id)
 	c.JSON(200, gin.H{
 		"status": true,
@@ -91,20 +87,13 @@ func UpdateUserInfo(c *gin.Context) {
 }
 
 func GetAvatar(c *gin.Context) {
-	uid, err := strconv.Atoi(c.Param("uid"))
-	if err != nil {
-		c.AbortWithStatus(400)
-	}
+	uid := utils.StringToInt(c.Param("uid"), c)
 	user := models.GetUserById(uid)
 	c.File(avatarPath + user.Avatar)
 }
 
 func UpdateAvatar(c *gin.Context) {
-	uid, err := strconv.Atoi(c.Param("uid"))
-
-	if err != nil {
-		c.AbortWithStatus(400)
-	}
+	uid := utils.StringToInt(c.Param("uid"), c)
 
 	user := c.MustGet("user").(models.User)
 
@@ -125,7 +114,7 @@ func UpdateAvatar(c *gin.Context) {
 	}
 
 	if user.Avatar == "default" {
-		user.Avatar = strconv.Itoa(user.Uid)
+		user.Avatar = utils.IntToString(user.Uid)
 		models.UpdateUser(user)
 	}
 
