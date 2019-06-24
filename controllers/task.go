@@ -122,14 +122,6 @@ func GetTaskFiles(c *gin.Context) {
 	filename := c.Param("filename")
 
 	path := filePath + c.Param("task_id") + "/" + filename
-	//if  _, err := os.Stat(path); os.IsNotExist(err) {
-	//	c.AbortWithStatusJSON(404, gin.H{
-	//		"msg":    "cannot find file",
-	//		"status": false,
-	//	})
-	//	return
-	//}
-
 	f, err := os.Open(path)
 	if err != nil {
 		c.AbortWithStatusJSON(404, gin.H{
