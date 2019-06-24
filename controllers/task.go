@@ -85,7 +85,7 @@ func CreateTask(c *gin.Context) {
 			}
 			task.Files += file.Filename + "/"
 		}
-		task.Files = task.Files[0:len(task.Files) - 1]
+		task.Files = task.Files[0 : len(task.Files)-1]
 		models.DB.Save(&task)
 	}
 
