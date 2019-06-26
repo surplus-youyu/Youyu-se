@@ -105,6 +105,9 @@ func CreateTask(task Task, user User) int {
 func GetTaskByID(id int) Task {
 	var task Task
 	if err := DB.Find(&task, Task{ID: id}).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			panic(utils.Error{404, "Not Found", err})
+		}
 		panic(err)
 	}
 	return task

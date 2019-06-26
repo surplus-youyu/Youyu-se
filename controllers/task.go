@@ -312,32 +312,40 @@ func GetSurveyStatistics(c *gin.Context) {
 	var content []interface{}
 	_ = json.Unmarshal([]byte(task.Content), &content)
 
-	data := []gin.H{}
+	var data []map[string]int
 
 	assignList := models.GetAssignmentListByTaskID(id)
 
+	type Item struct {
+		Title    string   `json:"title"`
+		Type     int      `json:"type"`
+		Options  []string `json:"options"`
+		Optional bool     `json:"optional"`
+		Limit    int      `json:"limit"`
+		Answer   []string `json:"answer"`
+	}
+
 	for _, q := range content {
-		question := q.(gin.H)
-		if question["type"].(int) == 3 {
+		question := q.(map[string]interface{})
+		if question["type"].(float64) == 3.0 {
 			continue
 		}
 
-		data = append(data, gin.H{})
+		data = append(data, map[string]int{})
 		index := len(data) - 1
 
 		for j := range assignList {
 			assign := assignList[j]
 
-			var raw interface{}
-			_ = json.Unmarshal([]byte(assign.Payload), &raw)
-			answer := raw.(gin.H)
-			options := answer["answer"].([]string)
-
-			for _, op := range options {
-				if val, ok := data[index][op]; ok {
-					data[index][op] = val.(int) + 1
-				} else {
-					data[index][op] = 0
+			var items []Item
+			_ = json.Unmarshal([]byte(assign.Payload), &items)
+			for _, item := range items {
+				for _, answer := range item.Answer {
+					if val, ok := data[index][answer]; ok {
+						data[index][answer] = val + 1
+					} else {
+						data[index][answer] = 1
+					}
 				}
 			}
 		}
