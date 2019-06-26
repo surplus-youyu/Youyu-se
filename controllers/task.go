@@ -320,7 +320,7 @@ func GetSurveyStatistics(c *gin.Context) {
 	var content []Item
 	_ = json.Unmarshal([]byte(task.Content), &content)
 
-	var data []map[string]int
+	var data []map[string]interface{}
 
 	assignList := models.GetAssignmentListByTaskID(id)
 
@@ -329,9 +329,10 @@ func GetSurveyStatistics(c *gin.Context) {
 			continue
 		}
 
-		data = append(data, map[string]int{})
+		data = append(data, map[string]interface{}{})
 		index := len(data) - 1
 
+		data[index]["title"] = question.Title
 		for _, opt := range question.Options {
 			data[index][opt] = 0
 		}
@@ -344,7 +345,7 @@ func GetSurveyStatistics(c *gin.Context) {
 			item := items[index]
 			for _, answer := range item.Answer {
 				val := data[index][answer]
-				data[index][answer] = val + 1
+				data[index][answer] = val.(int) + 1
 			}
 		}
 	}
