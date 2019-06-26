@@ -38,7 +38,7 @@ func CreateGroup(group Group) {
 		panic(err)
 	}
 
-	if err := tx.Create(&GroupUser{ UID: group.Owner, GID: group.ID }); err != nil {
+	if err := tx.Create(&GroupUser{UID: group.Owner, GID: group.ID}); err != nil {
 		tx.Rollback()
 		panic(err)
 	}
@@ -64,7 +64,7 @@ func JoinedGroupList(uid int) []Group {
 func GetGroupList() []Group {
 	var group []Group
 
-	if err := DB.Find(&group, Group{ IsPublic: 1 }).Error; err != nil {
+	if err := DB.Find(&group, Group{IsPublic: 1}).Error; err != nil {
 		panic(err)
 	}
 
@@ -81,19 +81,19 @@ func JoinGroup(uid int, gid int) {
 	}
 
 	var group Group
-	if err := DB.Find(&group, Group{ ID: gid }).Error; err != nil {
+	if err := DB.Find(&group, Group{ID: gid}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			panic(utils.Error{404, "未找到组", err})
 		}
 		panic(err)
 	}
 
-	DB.Create(&GroupUser{GID:gid, UID:uid, Status:1})
+	DB.Create(&GroupUser{GID: gid, UID: uid, Status: 1})
 }
 
 func RemoveFromGroup(owner int, gid int, member int) {
 	var group Group
-	if err := DB.Find(&group, Group{ ID: gid, Owner: owner }).Error; err != nil {
+	if err := DB.Find(&group, Group{ID: gid, Owner: owner}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			panic(utils.Error{404, "未找到组", err})
 		}
@@ -102,14 +102,14 @@ func RemoveFromGroup(owner int, gid int, member int) {
 
 	if err := DB.Table("group_user").
 		Where("uid = ? AND gid = ?", member, gid).
-		Update(GroupUser{Status:0}).Error; err != nil {
+		Update(GroupUser{Status: 0}).Error; err != nil {
 		panic(err)
 	}
 }
 
-func DeleteGroup(owner int, gid int)  {
+func DeleteGroup(owner int, gid int) {
 	var group Group
-	if err := DB.Find(&group, Group{ ID: gid, Owner: owner }).Error; err != nil {
+	if err := DB.Find(&group, Group{ID: gid, Owner: owner}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			panic(utils.Error{404, "未找到组", err})
 		}
@@ -122,7 +122,7 @@ func DeleteGroup(owner int, gid int)  {
 		panic(err)
 	}
 
-	if err := DB.Delete(Group{ID:gid, Owner:owner}).Error; err != nil {
+	if err := DB.Delete(Group{ID: gid, Owner: owner}).Error; err != nil {
 		panic(err)
 	}
 }
@@ -130,7 +130,7 @@ func DeleteGroup(owner int, gid int)  {
 func GetGroupMembers(gid int) []User {
 	var group Group
 	var users []User
-	if err := DB.Find(&group, Group{ ID: gid }).Error; err != nil {
+	if err := DB.Find(&group, Group{ID: gid}).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			panic(utils.Error{404, "未找到组", err})
 		}

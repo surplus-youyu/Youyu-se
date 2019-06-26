@@ -8,10 +8,10 @@ import (
 
 func CreateGroup(c *gin.Context) {
 	type ReqBody struct {
-		Name  string `json:"name"`
-		Intro string `json:"intro"`
-		IsPublic int `json:"is_public"`
-		Type int `json:"type"`
+		Name     string `json:"name"`
+		Intro    string `json:"intro"`
+		IsPublic int    `json:"is_public"`
+		Type     int    `json:"type"`
 	}
 
 	var req ReqBody
@@ -35,7 +35,7 @@ func CreateGroup(c *gin.Context) {
 	models.CreateGroup(group)
 
 	c.JSON(200, gin.H{
-		"msg": "OK",
+		"msg":    "OK",
 		"status": true,
 	})
 }
@@ -43,9 +43,9 @@ func CreateGroup(c *gin.Context) {
 func GetGroupList(c *gin.Context) {
 	groups := models.GetGroupList()
 	c.JSON(200, gin.H{
-		"msg": "OK",
-		"status" : true,
-		"data" :groups,
+		"msg":    "OK",
+		"status": true,
+		"data":   groups,
 	})
 }
 
@@ -53,16 +53,16 @@ func GetJoinedGroup(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	groups := models.JoinedGroupList(user.Uid)
 	c.JSON(200, gin.H{
-		"msg": "OK",
-		"status" : true,
-		"data" :groups,
+		"msg":    "OK",
+		"status": true,
+		"data":   groups,
 	})
 }
 
 func RemoveMemberFromGroup(c *gin.Context) {
 	type ReqBody struct {
-		Member  int    `json:"member"`
-		Gid     int    `json:"gid"`
+		Member int `json:"member"`
+		Gid    int `json:"gid"`
 	}
 
 	var req ReqBody
@@ -78,14 +78,14 @@ func RemoveMemberFromGroup(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	models.RemoveFromGroup(user.Uid, req.Gid, req.Member)
 	c.JSON(200, gin.H{
-		"msg": "OK",
+		"msg":    "OK",
 		"status": true,
 	})
 }
 
 func DeleteGroup(c *gin.Context) {
 	type ReqBody struct {
-		Gid     int    `json:"gid"`
+		Gid int `json:"gid"`
 	}
 
 	var req ReqBody
@@ -101,14 +101,14 @@ func DeleteGroup(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	models.DeleteGroup(user.Uid, req.Gid)
 	c.JSON(200, gin.H{
-		"msg": "OK",
+		"msg":    "OK",
 		"status": true,
 	})
 }
 
 func JoinGroup(c *gin.Context) {
 	type ReqBody struct {
-		Gid     int    `json:"gid"`
+		Gid int `json:"gid"`
 	}
 
 	var req ReqBody
@@ -125,17 +125,17 @@ func JoinGroup(c *gin.Context) {
 	models.JoinGroup(user.Uid, req.Gid)
 
 	c.JSON(200, gin.H{
-		"msg": "OK",
+		"msg":    "OK",
 		"status": true,
 	})
 }
 
-func GetMembers(c *gin.Context)  {
+func GetMembers(c *gin.Context) {
 	gid := utils.StringToInt(c.Param("gid"), c)
 	members := models.GetGroupMembers(gid)
 	c.JSON(200, gin.H{
-		"msg": "OK",
+		"msg":    "OK",
 		"status": true,
-		"data": members,
+		"data":   members,
 	})
 }
