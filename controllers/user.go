@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"github.com/surplus-youyu/Youyu-se/utils"
+	"net/http"
 )
 
 const avatarPath = "static/avatars/"
@@ -11,7 +12,8 @@ const avatarPath = "static/avatars/"
 func GetUserInfo(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"msg":    "OK",
 		"data": gin.H{
@@ -31,7 +33,8 @@ func GetUserInfo(c *gin.Context) {
 func GetUserInfoById(c *gin.Context) {
 	id := utils.StringToInt(c.Param("uid"), c)
 	user := models.GetUserById(id)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"msg":    "OK",
 		"data": gin.H{
@@ -58,7 +61,8 @@ func UpdateUserInfo(c *gin.Context) {
 	var req ReqBody
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "invalid param",
 		})
@@ -80,7 +84,8 @@ func UpdateUserInfo(c *gin.Context) {
 
 	models.UpdateUser(user)
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"msg":    "success",
 	})
@@ -98,7 +103,8 @@ func UpdateAvatar(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 
 	if uid != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg":    "只能修改自己的头像",
 			"status": true,
 		})
@@ -107,7 +113,8 @@ func UpdateAvatar(c *gin.Context) {
 	newAvatar, err := c.FormFile("avatar")
 
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  false,
 			"message": "invalid avatar",
 		})
@@ -119,13 +126,15 @@ func UpdateAvatar(c *gin.Context) {
 	}
 
 	if err := c.SaveUploadedFile(newAvatar, avatarPath+user.Avatar); err != nil {
-		c.JSON(500, gin.H{
+		// 500
+		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  false,
 			"message": "Cannot upload avatar",
 		})
 	}
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"msg":    "success",
 	})
