@@ -134,7 +134,7 @@ func IssueTaskRewards(task Task) {
 	}
 	if len(assigneeList) == 0 {
 		creator.Balance += task.Reward
-		if err := tx.Save(&creator); err != nil {
+		if err := tx.Save(&creator).Error; err != nil {
 			tx.Rollback()
 			panic(err)
 		}
