@@ -39,7 +39,7 @@ func Route(r *gin.Engine) {
 		api.Use(loginRequired())
 
 		//loginout
-		api.PUT("/loginout", controllers.LoginoutHandler)
+		api.PUT("/logout", controllers.LogoutHandler)
 		// tasks apis
 		api.GET("/tasks", controllers.GetTaskList)                           // all tasks
 		api.POST("/tasks", controllers.CreateTask)                           // create task
