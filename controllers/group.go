@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"github.com/surplus-youyu/Youyu-se/utils"
+	"net/http"
 )
 
 func CreateGroup(c *gin.Context) {
@@ -17,7 +18,8 @@ func CreateGroup(c *gin.Context) {
 	var req ReqBody
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "invalid param",
 		})
@@ -34,7 +36,8 @@ func CreateGroup(c *gin.Context) {
 	}
 	models.CreateGroup(group)
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 	})
@@ -42,7 +45,9 @@ func CreateGroup(c *gin.Context) {
 
 func GetGroupList(c *gin.Context) {
 	groups := models.GetGroupList()
-	c.JSON(200, gin.H{
+
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 		"data":   groups,
@@ -52,7 +57,9 @@ func GetGroupList(c *gin.Context) {
 func GetJoinedGroup(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	groups := models.JoinedGroupList(user.Uid)
-	c.JSON(200, gin.H{
+
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 		"data":   groups,
@@ -68,7 +75,8 @@ func RemoveMemberFromGroup(c *gin.Context) {
 	var req ReqBody
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "invalid param",
 		})
@@ -77,7 +85,8 @@ func RemoveMemberFromGroup(c *gin.Context) {
 
 	user := c.MustGet("user").(models.User)
 	models.RemoveFromGroup(user.Uid, req.Gid, req.Member)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 	})
@@ -91,7 +100,8 @@ func DeleteGroup(c *gin.Context) {
 	var req ReqBody
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "invalid param",
 		})
@@ -100,7 +110,8 @@ func DeleteGroup(c *gin.Context) {
 
 	user := c.MustGet("user").(models.User)
 	models.DeleteGroup(user.Uid, req.Gid)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 	})
@@ -114,7 +125,8 @@ func JoinGroup(c *gin.Context) {
 	var req ReqBody
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "invalid param",
 		})
@@ -124,7 +136,8 @@ func JoinGroup(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	models.JoinGroup(user.Uid, req.Gid)
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 	})
@@ -133,7 +146,8 @@ func JoinGroup(c *gin.Context) {
 func GetMembers(c *gin.Context) {
 	gid := utils.StringToInt(c.Param("gid"), c)
 	members := models.GetGroupMembers(gid)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"msg":    "OK",
 		"status": true,
 		"data":   members,

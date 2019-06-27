@@ -33,12 +33,12 @@ func CreateGroup(group Group) {
 		panic(err)
 	}
 
-	if err := tx.Create(&group); err != nil {
+	if err := tx.Create(&group).Error; err != nil {
 		tx.Rollback()
 		panic(err)
 	}
 
-	if err := tx.Create(&GroupUser{UID: group.Owner, GID: group.ID}); err != nil {
+	if err := tx.Create(&GroupUser{UID: group.Owner, GID: group.ID}).Error; err != nil {
 		tx.Rollback()
 		panic(err)
 	}

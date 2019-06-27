@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"io"
-	"os"
-
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"github.com/surplus-youyu/Youyu-se/utils"
+	"io"
+	"net/http"
+	"os"
 )
 
 const filePath = "static/files/"
@@ -24,7 +24,8 @@ func GetTaskList(c *gin.Context) {
 		taskList = models.GetTaskList()
 		break
 	}
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": taskList,
 		"msg":  "OK",
 	})
@@ -42,7 +43,8 @@ func CreateTask(c *gin.Context) {
 	values := form.Value
 	reward := utils.StringToFloat32(values["reward"][0], c)
 	if user.Balance < reward {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "余额不足",
 		})
 		return
@@ -67,7 +69,8 @@ func CreateTask(c *gin.Context) {
 		path := filePath + utils.IntToString(insertID)
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {
-			c.AbortWithStatusJSON(500, gin.H{
+			// 500
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 				"msg":    "fail to upload files",
 				"status": false,
 			})
@@ -77,7 +80,8 @@ func CreateTask(c *gin.Context) {
 		for _, file := range files["files"] {
 			err := c.SaveUploadedFile(file, path+"/"+file.Filename)
 			if err != nil {
-				c.AbortWithStatusJSON(500, gin.H{
+				// 500
+				c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 					"msg":    "fail to upload files",
 					"status": false,
 				})
@@ -89,7 +93,8 @@ func CreateTask(c *gin.Context) {
 		models.DB.Save(&task)
 	}
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"id": insertID,
 		},
@@ -101,7 +106,8 @@ func GetTaskByID(c *gin.Context) {
 	id := utils.StringToInt(c.Param("task_id"), c)
 	task := models.GetTaskByID(id)
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": task,
 		"msg":  "OK",
 	})
@@ -113,7 +119,8 @@ func GetTaskFiles(c *gin.Context) {
 	path := filePath + c.Param("task_id") + "/" + filename
 	f, err := os.Open(path)
 	if err != nil {
-		c.AbortWithStatusJSON(404, gin.H{
+		// 404
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"msg":    "cannot find file",
 			"status": false,
 		})
@@ -133,12 +140,14 @@ func GetAssignmentByID(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	assign := models.GetAssignmentByID(id)
 	if assign.Assignee != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "权限不足",
 		})
 		return
 	}
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": assign,
 		"msg":  "OK",
 	})
@@ -149,13 +158,15 @@ func GetAssignListByTaskID(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	task := models.GetTaskByID(id)
 	if task.Creator != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "权限不足",
 		})
 		return
 	}
 	assgnList := models.GetAssignmentListByTaskID(id)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": assgnList,
 		"msg":  "OK",
 	})
@@ -170,13 +181,15 @@ func SubmitAssign(c *gin.Context) {
 	var req Req
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.AbortWithStatus(400)
+		// 400
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	user := c.MustGet("user").(models.User)
 	assign := models.GetAssignmentByID(id)
 	if assign.Assignee != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "权限不足",
 		})
 		return
@@ -184,13 +197,15 @@ func SubmitAssign(c *gin.Context) {
 	assign.Payload = req.Payload
 	assign.Status = models.AssignmentStatusJudging
 	models.UpsertAssignment(&assign)
-	c.Status(204)
+	// 204
+	c.Status(http.StatusNoContent)
 }
 
 func GetAssignList(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	assignlist := models.GetAssignmentListByUid(user.Uid)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": assignlist,
 		"msg":  "OK",
 	})
@@ -203,25 +218,29 @@ func AssignTask(c *gin.Context) {
 	var req Req
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.AbortWithStatus(400)
+		// 400
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	user := c.MustGet("user").(models.User)
 	task := models.GetTaskByID(req.TaskID)
 	if task.Creator == user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "不能认领自己发布的任务",
 		})
 		return
 	}
 	if task.Assigned == task.Limit {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "任务已被认领完",
 		})
 		return
 	}
 	if task.Status == models.TaskStatusFinished {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "任务已结束",
 		})
 		return
@@ -235,7 +254,8 @@ func AssignTask(c *gin.Context) {
 		Status:   models.AssignmentStatusPending,
 	}
 	models.UpsertAssignment(assign)
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
 			"id": assign.ID,
 		},
@@ -250,7 +270,8 @@ func JudgeAssignment(c *gin.Context) {
 	var req Req
 	err := c.BindJSON(&req)
 	if err != nil {
-		c.AbortWithStatus(400)
+		// 400
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	assignID := utils.StringToInt(c.Param("assign_id"), c)
@@ -271,7 +292,8 @@ func JudgeAssignment(c *gin.Context) {
 		assign.Status = models.AssignmentStatusFailed
 	}
 	models.UpsertAssignment(&assign)
-	c.JSON(204, gin.H{
+	// 204
+	c.JSON(http.StatusNoContent, gin.H{
 		"msg":    "OK",
 		"status": true,
 	})
@@ -282,13 +304,15 @@ func FinishTask(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	task := models.GetTaskByID(taskID)
 	if task.Creator != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "权限不足",
 		})
 		return
 	}
 	models.IssueTaskRewards(task)
-	c.Status(204)
+	// 204
+	c.Status(http.StatusNoContent)
 }
 
 func GetSurveyStatistics(c *gin.Context) {
@@ -296,14 +320,16 @@ func GetSurveyStatistics(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	task := models.GetTaskByID(id)
 	if task.Creator != user.Uid {
-		c.AbortWithStatusJSON(403, gin.H{
+		// 403
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"msg": "权限不足",
 		})
 		return
 	}
 
 	if task.Type != models.TaskTypeSurvey {
-		c.JSON(400, gin.H{
+		// 400
+		c.JSON(http.StatusBadRequest, gin.H{
 			"status": false,
 			"msg":    "非问卷无统计",
 		})
@@ -350,7 +376,8 @@ func GetSurveyStatistics(c *gin.Context) {
 		}
 	}
 
-	c.JSON(200, gin.H{
+	// 200
+	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"msg":    "OK",
 		"data":   data,
