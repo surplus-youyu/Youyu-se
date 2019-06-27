@@ -33,6 +33,7 @@ func Route(r *gin.Engine) {
 	{
 		// auth api
 		api.PUT("/login", controllers.LoginHandler)
+		api.GET("/loginout", controllers.LoginoutHandler)
 		api.POST("/register", controllers.RegisterHandler)
 
 		// login middleware
