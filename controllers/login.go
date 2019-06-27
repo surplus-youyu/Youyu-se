@@ -50,16 +50,6 @@ func LoginHandler(c *gin.Context) {
 
 func LoginoutHandler(c *gin.Context) {
 	session := sessions.Default(c)
-	email := session.Get("userEmail")
-	if email == nil {
-		c.Abort()
-		// 401
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": false,
-			"msg":    "you should login first",
-		})
-		return
-	}
 	// 删除用户登陆状态
 	session.Delete("userEmail")
 	session.Save()

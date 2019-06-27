@@ -33,12 +33,13 @@ func Route(r *gin.Engine) {
 	{
 		// auth api
 		api.PUT("/login", controllers.LoginHandler)
-		api.GET("/loginout", controllers.LoginoutHandler)
 		api.POST("/register", controllers.RegisterHandler)
 
 		// login middleware
 		api.Use(loginRequired())
 
+		//loginout
+		api.GET("/loginout", controllers.LoginoutHandler)
 		// tasks apis
 		api.GET("/tasks", controllers.GetTaskList)                           // all tasks
 		api.POST("/tasks", controllers.CreateTask)                           // create task
