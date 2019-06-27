@@ -48,7 +48,7 @@ func LoginHandler(c *gin.Context) {
 	})
 }
 
-func LoginoutHandler(c *gin.Context) {
+func LogoutHandler(c *gin.Context) {
 	session := sessions.Default(c)
 	// 删除用户登陆状态
 	session.Delete("userEmail")
