@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"encoding/json"
-	"io"
-	"os"
-	"net/http"
 	"github.com/gin-gonic/gin"
 	"github.com/surplus-youyu/Youyu-se/models"
 	"github.com/surplus-youyu/Youyu-se/utils"
+	"io"
+	"net/http"
+	"os"
 )
 
 const filePath = "static/files/"

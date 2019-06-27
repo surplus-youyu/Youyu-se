@@ -61,10 +61,13 @@ func LoginoutHandler(c *gin.Context) {
 		return
 	}
 	// 删除用户登陆状态
-    session.Delete("userEmail")
-    session.Save()
+	session.Delete("userEmail")
+	session.Save()
 
-    c.Redirect(http.StatusMovedPermanently, "/")
+	c.JSON(http.StatusOK, gin.H{
+		"status": true,
+		"msg":    "login out succeed",
+	})
 }
 
 func RegisterHandler(c *gin.Context) {
